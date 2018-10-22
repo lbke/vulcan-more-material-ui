@@ -6,6 +6,9 @@ import Toolbar from "@material-ui/core/Toolbar";
 import { Components, replaceComponent, Utils } from "meteor/vulcan:core";
 import withStyles from "@material-ui/core/styles/withStyles";
 import classNames from "classnames";
+import "./SideNavigation";
+import "./Header";
+import "./ToasterSetup";
 
 const drawerWidth = 240;
 const topBarHeight = 100;
@@ -93,7 +96,7 @@ class Layout extends React.Component {
     //const routeName = Utils.slugify(this.props.currentRoute.name);
     const classes = this.props.classes;
     const isOpen = this.state.isOpen;
-    const { headerProps = {} } = this.props;
+    const { headerProps = {}, menuProps = {} } = this.props;
 
     return (
       <div className={classNames(classes.root, "wrapper")}>
@@ -117,7 +120,7 @@ class Layout extends React.Component {
             >
               <Toolbar />
             </AppBar>
-            <Components.SideNavigation />
+            <Components.SideNavigation {...menuProps} />
           </Drawer>
 
           <main
@@ -140,7 +143,8 @@ class Layout extends React.Component {
 Layout.propTypes = {
   classes: PropTypes.object.isRequired,
   children: PropTypes.node,
-  headerProps: PropTypes.object
+  headerProps: PropTypes.object,
+  menuProps: PropTypes.object
 };
 
 Layout.displayName = "Layout";

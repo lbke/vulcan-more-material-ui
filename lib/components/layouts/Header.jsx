@@ -7,8 +7,15 @@ import Typography from "@material-ui/core/Typography";
 import MenuIcon from "mdi-material-ui/Menu";
 import ChevronLeftIcon from "mdi-material-ui/ChevronLeft";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { getSetting, Components, registerComponent } from "meteor/vulcan:core";
+import {
+  getSetting,
+  registerSetting,
+  Components,
+  registerComponent
+} from "meteor/vulcan:core";
 import classNames from "classnames";
+
+registerSetting("layout.headerLogoUrl", undefined, "Small header logo url");
 
 const drawerWidth = 240;
 const topBarHeight = 100;
@@ -88,7 +95,7 @@ const Header = (
     isSideNavOpen,
     toggleSideNav,
     title = getSetting("title", "My App"),
-    headerLogoUrl = getSetting("headerLogoUrl"),
+    headerLogoUrl = getSetting("layout.headerLogoUrl"),
     headerRight
   },
   context

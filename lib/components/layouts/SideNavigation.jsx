@@ -19,7 +19,6 @@ import HomeIcon from "mdi-material-ui/Home";
 import withStyles from "@material-ui/core/styles/withStyles";
 
 import { getAuthorizedMenuItems } from "meteor/vulcan:menu";
-import { getAuthorizedBackofficeMenuItems } from "meteor/vulcan:backoffice-builder";
 import { intlShape } from "meteor/vulcan:i18n";
 
 const styles = theme => ({
@@ -45,10 +44,10 @@ class SideNavigation extends React.Component {
     const currentUser = this.props.currentUser;
     const classes = this.props.classes;
     const isOpen = this.state.isOpen;
+    const { adminMenuItems } = this.props;
 
     // ignores items the user can't see
     const basicMenuItems = getAuthorizedMenuItems();
-    const adminMenuItems = getAuthorizedBackofficeMenuItems(currentUser);
     return (
       <div className={classes.root}>
         <List>
