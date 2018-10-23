@@ -18,7 +18,7 @@ import LockIcon from "mdi-material-ui/Lock";
 import HomeIcon from "mdi-material-ui/Home";
 import withStyles from "@material-ui/core/styles/withStyles";
 
-import { getAuthorizedMenuItems } from "meteor/vulcan:menu";
+import { getAuthorizedMenuItems, menuItemProps } from "meteor/vulcan:menu";
 import { intlShape } from "meteor/vulcan:i18n";
 
 const styles = theme => ({
@@ -27,6 +27,27 @@ const styles = theme => ({
     paddingLeft: theme.spacing.unit * 4
   }
 });
+
+const MenuItem = (
+  { name, label, path, labelToken, LeftComponent, RightComponent },
+  { intl }
+) => (
+  <ListItem key={name} button onClick={() => browserHistory.push(path)}>
+    {LeftComponent && (
+      <ListItemIcon>
+        <LeftComponent />
+      </ListItemIcon>
+    )}
+    <ListItemText primary={label || intl.formatMessage({ id: labelToken })} />
+    {RightComponent && (
+      <ListItemIcon>
+        <RightComponent />
+      </ListItemIcon>
+    )}
+  </ListItem>
+);
+
+MenuItem.propTypes = menuItemProps;
 
 class SideNavigation extends React.Component {
   state = {
@@ -68,16 +89,8 @@ class SideNavigation extends React.Component {
         </List>
         {basicMenuItems.length > 0 && (
           <List>
-            {basicMenuItems.map(({ name, label, path, labelToken }) => (
-              <ListItem
-                key={name}
-                button
-                onClick={() => browserHistory.push(path)}
-              >
-                <ListItemText
-                  primary={label || intl.formatMessage({ id: labelToken })}
-                />
-              </ListItem>
+            {basicMenuItems.map(props => (
+              <MenuItem key={props.name} {...props} />
             ))}
           </List>
         )}
@@ -100,16 +113,8 @@ class SideNavigation extends React.Component {
                 transitionduration="auto"
                 unmountOnExit
               >
-                {adminMenuItems.map(({ name, label, path, labelToken }) => (
-                  <ListItem
-                    key={name}
-                    button
-                    onClick={() => browserHistory.push(path)}
-                  >
-                    <ListItemText
-                      primary={label || intl.formatMessage({ id: labelToken })}
-                    />
-                  </ListItem>
+                {adminMenuItems.map(props => (
+                  <MenuItem key={props.name} {...props} />
                 ))}
               </Collapse>
             </List>
@@ -121,6 +126,9 @@ class SideNavigation extends React.Component {
 }
 
 SideNavigation.contextTypes = {
+  intl: intlShape
+};
+MenuItem.contextTypes = {
   intl: intlShape
 };
 SideNavigation.propTypes = {
