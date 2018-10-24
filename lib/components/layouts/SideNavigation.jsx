@@ -95,31 +95,32 @@ class SideNavigation extends React.Component {
           </List>
         )}
 
-        {adminMenuItems.length > 0 && (
-          <div>
-            <Divider />
-            <List>
-              <ListItem button onClick={e => this.toggle("admin")}>
-                <ListItemIcon>
-                  <LockIcon />
-                </ListItemIcon>
-                <ListItemText
-                  primary={intl.formatMessage({ id: "layout.menu.admin" })}
-                />
-                {isOpen.admin ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-              </ListItem>
-              <Collapse
-                in={isOpen.admin}
-                transitionduration="auto"
-                unmountOnExit
-              >
-                {adminMenuItems.map(props => (
-                  <MenuItem key={props.name} {...props} />
-                ))}
-              </Collapse>
-            </List>
-          </div>
-        )}
+        {adminMenuItems &&
+          adminMenuItems.length > 0 && (
+            <div>
+              <Divider />
+              <List>
+                <ListItem button onClick={e => this.toggle("admin")}>
+                  <ListItemIcon>
+                    <LockIcon />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={intl.formatMessage({ id: "layout.menu.admin" })}
+                  />
+                  {isOpen.admin ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                </ListItem>
+                <Collapse
+                  in={isOpen.admin}
+                  transitionduration="auto"
+                  unmountOnExit
+                >
+                  {adminMenuItems.map(props => (
+                    <MenuItem key={props.name} {...props} />
+                  ))}
+                </Collapse>
+              </List>
+            </div>
+          )}
       </div>
     );
   }
@@ -133,7 +134,8 @@ MenuItem.contextTypes = {
 };
 SideNavigation.propTypes = {
   classes: PropTypes.object.isRequired,
-  currentUser: PropTypes.object
+  currentUser: PropTypes.object,
+  adminMenuItems: PropTypes.array
 };
 
 SideNavigation.displayName = "SideNavigation";
