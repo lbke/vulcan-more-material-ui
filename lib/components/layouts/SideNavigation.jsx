@@ -29,13 +29,33 @@ const styles = theme => ({
 });
 
 const MenuItem = (
-  { name, label, path, onClick, labelToken, LeftComponent, RightComponent },
+  {
+    name,
+    label,
+    path,
+    onClick,
+    // called after the main action is done
+    afterClick,
+    labelToken,
+    LeftComponent,
+    RightComponent
+  },
   { intl }
 ) => (
   <ListItem
     key={name}
     button
-    onClick={onClick || (() => browserHistory.push(path))}
+    onClick={
+      onClick
+        ? () => {
+            onClick();
+            afterClick && afterClick();
+          }
+        : () => {
+            browserHistory.push(path);
+            afterClick && afterClick();
+          }
+    }
   >
     {LeftComponent && (
       <ListItemIcon>
@@ -51,7 +71,12 @@ const MenuItem = (
   </ListItem>
 );
 
-MenuItem.propTypes = menuItemProps;
+MenuItem.propTypes = {
+  ...menuItemProps,
+  // parent can pass another onClick callback
+  // eg to close the menu
+  afterClick: PropTypes.func
+};
 
 class SideNavigation extends React.Component {
   state = {
@@ -66,10 +91,13 @@ class SideNavigation extends React.Component {
 
   render() {
     const { intl } = this.context;
-    const currentUser = this.props.currentUser;
-    const classes = this.props.classes;
+    const {
+      currentUser,
+      classes,
+      adminMenuItems,
+      onMenuItemClick
+    } = this.props;
     const isOpen = this.state.isOpen;
-    const { adminMenuItems } = this.props;
 
     // ignores items the user can't see
     const basicMenuItems = getAuthorizedMenuItems(currentUser);
@@ -93,8 +121,12 @@ class SideNavigation extends React.Component {
         </List>
         {basicMenuItems.length > 0 && (
           <List>
-            {basicMenuItems.map(props => (
-              <MenuItem key={props.name} {...props} />
+            {basicMenuItems.map(itemProps => (
+              <MenuItem
+                key={itemProps.name}
+                {...itemProps}
+                afterClick={onMenuItemClick}
+              />
             ))}
           </List>
         )}
@@ -119,7 +151,11 @@ class SideNavigation extends React.Component {
                   unmountOnExit
                 >
                   {adminMenuItems.map(props => (
-                    <MenuItem key={props.name} {...props} />
+                    <MenuItem
+                      key={props.name}
+                      afterClick={onMenuItemClick}
+                      {...props}
+                    />
                   ))}
                 </Collapse>
               </List>

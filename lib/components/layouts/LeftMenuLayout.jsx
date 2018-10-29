@@ -107,9 +107,14 @@ const ResponsiveDrawer = ({ children, classes, open, toggle }) => (
   </React.Fragment>
 );
 class Layout extends React.Component {
-  state = {
-    isOpen: { sideNav: true }
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      isOpen: {
+        sideNav: !["xs", "sm"].includes(props.width)
+      }
+    };
+  }
 
   toggle = (item, openOrClose) => {
     const newState = { isOpen: {} };
@@ -147,7 +152,12 @@ class Layout extends React.Component {
             >
               <Toolbar />
             </AppBar>
-            <Components.SideNavigation {...menuProps} />
+            <Components.SideNavigation
+              onMenuItemClick={
+                ["xs", "sm"].includes(width) ? this.toggle : undefined
+              }
+              {...menuProps}
+            />
           </ResponsiveDrawer>
 
           <main
