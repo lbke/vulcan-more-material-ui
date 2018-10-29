@@ -3,9 +3,12 @@ import PropTypes from "prop-types";
 import Drawer from "@material-ui/core/Drawer";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
+import Hidden from "@material-ui/core/Hidden";
 import { Components, replaceComponent, Utils } from "meteor/vulcan:core";
 import withStyles from "@material-ui/core/styles/withStyles";
 import classNames from "classnames";
+import withWidth from "@material-ui/core/withWidth";
+
 import "./SideNavigation";
 import "./Header";
 import "./ToasterSetup";
@@ -78,6 +81,31 @@ const styles = theme => {
   };
 };
 
+const ResponsiveDrawer = ({ children, classes, open, toggle }) => (
+  <React.Fragment>
+    <Hidden mdUp>
+      <Drawer
+        variant="temporary"
+        classes={{ paper: classes.drawerPaper }}
+        open={open}
+        onClose={toggle}
+        //elevation={12}
+      >
+        {children}
+      </Drawer>
+    </Hidden>
+    <Hidden smDown>
+      <Drawer
+        variant="persistent"
+        classes={{ paper: classes.drawerPaper }}
+        open={open}
+        //elevation={12}
+      >
+        {children}
+      </Drawer>
+    </Hidden>
+  </React.Fragment>
+);
 class Layout extends React.Component {
   state = {
     isOpen: { sideNav: true }
@@ -94,9 +122,8 @@ class Layout extends React.Component {
 
   render = () => {
     //const routeName = Utils.slugify(this.props.currentRoute.name);
-    const classes = this.props.classes;
+    const { classes, width, headerProps = {}, menuProps = {} } = this.props;
     const isOpen = this.state.isOpen;
-    const { headerProps = {}, menuProps = {} } = this.props;
 
     return (
       <div className={classNames(classes.root, "wrapper")}>
@@ -107,10 +134,10 @@ class Layout extends React.Component {
             {...headerProps}
           />
 
-          <Drawer
-            variant="persistent"
-            classes={{ paper: classes.drawerPaper }}
+          <ResponsiveDrawer
+            classes={classes}
             open={isOpen.sideNav}
+            toggle={this.toggle}
             //elevation={12}
           >
             <AppBar
@@ -121,13 +148,17 @@ class Layout extends React.Component {
               <Toolbar />
             </AppBar>
             <Components.SideNavigation {...menuProps} />
-          </Drawer>
+          </ResponsiveDrawer>
 
           <main
             className={classNames(
               classes.content,
               isOpen.sideNav && classes.mainShift
             )}
+            style={{
+              // force margin to zero if small screen
+              marginLeft: ["xs", "sm"].includes(width) ? 0 : undefined
+            }}
           >
             {this.props.children}
           </main>
@@ -149,5 +180,5 @@ Layout.propTypes = {
 
 Layout.displayName = "Layout";
 
-const LayoutWithStyle = withStyles(styles)(Layout);
+const LayoutWithStyle = withStyles(styles)(withWidth()(Layout));
 export default LayoutWithStyle;

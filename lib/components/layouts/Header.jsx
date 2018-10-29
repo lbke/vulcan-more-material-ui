@@ -7,6 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import MenuIcon from "mdi-material-ui/Menu";
 import ChevronLeftIcon from "mdi-material-ui/ChevronLeft";
 import withStyles from "@material-ui/core/styles/withStyles";
+import withWidth from "@material-ui/core/withWidth";
 import {
   getSetting,
   registerSetting,
@@ -96,7 +97,8 @@ const Header = (
     toggleSideNav,
     title = getSetting("title", "My App"),
     headerLogoUrl = getSetting("layout.headerLogoUrl"),
-    headerRight
+    headerRight,
+    width
   },
   context
 ) => {
@@ -113,6 +115,9 @@ const Header = (
           onClick={e => toggleSideNav()}
           className={classNames(classes.menuButton)}
           color="inherit"
+          style={{
+            marginRight: ["xs", "sm"].includes(width) ? 0 : undefined
+          }}
         >
           {isSideNavOpen ? <ChevronLeftIcon /> : <MenuIcon />}
         </IconButton>
@@ -139,4 +144,4 @@ Header.propTypes = {
 
 Header.displayName = "Header";
 
-registerComponent("Header", Header, [withStyles, styles]);
+registerComponent("Header", Header, [withStyles, styles], [withWidth]);
