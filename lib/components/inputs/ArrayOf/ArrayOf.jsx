@@ -6,7 +6,6 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Grid from "@material-ui/core/Grid";
-import "./NestedItem";
 
 const styles = theme => ({
   addButtonWrapper: {
@@ -59,7 +58,7 @@ class ArrayOf extends PureComponent {
       path,
       arrayField,
       showNextField = true,
-      ChildComponent = Components.ArrayOfNestedItem // default component
+      ChildComponent = Components.FormNestedItem // default component
     } = this.props;
     // only keep errors specific to the nested array (and not its subfields)
     const nestedArrayErrors = errors.filter(
@@ -133,3 +132,9 @@ ArrayOf.propTypes = {
   // if false user must manually press an "add" button
   showNextField: PropTypes.bool
 };
+
+const ArrayInput = arrayOf(Components.FormNestedItem);
+registerComponent({
+  name: "ArrayInput",
+  component: ArrayInput
+});

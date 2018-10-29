@@ -125,7 +125,6 @@ const Header = (
             {title}
           </Typography>
         </div>
-        <Components.UserIndicator />
         {headerRight && headerRight}
       </Toolbar>
     </AppBar>

@@ -29,10 +29,14 @@ const styles = theme => ({
 });
 
 const MenuItem = (
-  { name, label, path, labelToken, LeftComponent, RightComponent },
+  { name, label, path, onClick, labelToken, LeftComponent, RightComponent },
   { intl }
 ) => (
-  <ListItem key={name} button onClick={() => browserHistory.push(path)}>
+  <ListItem
+    key={name}
+    button
+    onClick={onClick || (() => browserHistory.push(path))}
+  >
     {LeftComponent && (
       <ListItemIcon>
         <LeftComponent />
@@ -68,7 +72,7 @@ class SideNavigation extends React.Component {
     const { adminMenuItems } = this.props;
 
     // ignores items the user can't see
-    const basicMenuItems = getAuthorizedMenuItems();
+    const basicMenuItems = getAuthorizedMenuItems(currentUser);
     return (
       <div className={classes.root}>
         <List>

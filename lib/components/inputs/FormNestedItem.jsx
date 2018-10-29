@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Components, registerComponent } from "meteor/vulcan:core";
+import { Components, replaceComponent } from "meteor/vulcan:core";
 import MinusIcon from "mdi-material-ui/Minus";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
@@ -16,25 +16,35 @@ const styles = theme => ({
   }
 });
 
-const ArrayOfNestedItem = (
-  { field, name, path, removeItem, itemIndex, classes, ...props },
+const FormNestedItem = (
+  { field, name, path, removeItem, itemIndex, classes, nestedFields, ...props },
   { errors }
 ) => {
   const isArray = typeof itemIndex !== "undefined";
   return (
     <Grid container className={classes.wrapper} alignItems="center">
       <Grid className={classes.inputWrapper} item style={{ flexGrow: 1 }}>
-        {
+        {nestedFields ? (
+          nestedFields.map(nestedField => (
+            <Components.FormComponent
+              key={nestedField.path}
+              {...props}
+              {...nestedField || {}}
+              path={`${path}.${nestedField.name}`}
+              itemIndex={itemIndex}
+            />
+          ))
+        ) : (
           <Components.FormComponent
             key={name}
             {...props}
-            {...(field || {})}
+            {...field || {}}
             name={name}
             path={path}
             itemIndex={itemIndex}
             hideLabel={true}
           />
-        }
+        )}
       </Grid>
       {isArray &&
         removeItem && (
@@ -55,19 +65,19 @@ const ArrayOfNestedItem = (
   );
 };
 
-ArrayOfNestedItem.propTypes = {
+FormNestedItem.propTypes = {
   path: PropTypes.string.isRequired,
   itemIndex: PropTypes.number
 };
 
-ArrayOfNestedItem.contextTypes = {
+FormNestedItem.contextTypes = {
   errors: PropTypes.array
 };
 
-export default ArrayOfNestedItem;
+export default FormNestedItem;
 
-registerComponent({
-  name: "ArrayOfNestedItem",
-  component: ArrayOfNestedItem,
+replaceComponent({
+  name: "FormNestedItem",
+  component: FormNestedItem,
   hocs: [[withStyles, styles]]
 });
