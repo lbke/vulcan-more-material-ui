@@ -53,7 +53,9 @@ const styles = theme => {
       height: `${topBarHeight}px !important`,
       minHeight: `${topBarHeight}px !important`,
       position: "relative !important",
-      backgroundColor: "#3A7bd5"
+      backgroundColor: theme.utils.appBarColor
+        ? theme.utils.appBarColor.backgroundColor
+        : "#3A7bd5"
     },
     content: {
       padding: contentPadding,

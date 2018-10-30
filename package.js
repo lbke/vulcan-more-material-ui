@@ -3,7 +3,7 @@ Package.describe({
 });
 
 Package.onUse(api => {
-  api.use(["vulcan:core", "vulcan:menu"]);
+  api.use(["vulcan:core", "vulcan:menu", "vulcan:more-helpers"]);
 
   api.addFiles(
     ["lib/stylesheets/roboto.css"], //, "lib/stylesheets/ReactToastify.min.css"],
