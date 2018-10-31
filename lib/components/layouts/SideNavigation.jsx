@@ -1,4 +1,5 @@
 import React from "react";
+import { withRouter } from "react-router";
 import PropTypes from "prop-types";
 import {
   Components,
@@ -38,13 +39,15 @@ const MenuItem = (
     afterClick,
     labelToken,
     LeftComponent,
-    RightComponent
+    RightComponent,
+    router
   },
   { intl }
 ) => (
   <ListItem
     key={name}
     button
+    selected={path && router.isActive(path)}
     onClick={
       onClick
         ? () => {
@@ -92,6 +95,7 @@ class SideNavigation extends React.Component {
   render() {
     const { intl } = this.context;
     const {
+      router,
       currentUser,
       classes,
       adminMenuItems,
@@ -124,6 +128,7 @@ class SideNavigation extends React.Component {
             {basicMenuItems.map(itemProps => (
               <MenuItem
                 key={itemProps.name}
+                router={router}
                 {...itemProps}
                 afterClick={onMenuItemClick}
               />
@@ -154,6 +159,7 @@ class SideNavigation extends React.Component {
                     <MenuItem
                       key={props.name}
                       afterClick={onMenuItemClick}
+                      router={router}
                       {...props}
                     />
                   ))}
@@ -184,5 +190,6 @@ registerComponent(
   "SideNavigation",
   SideNavigation,
   [withStyles, styles],
-  withCurrentUser
+  withCurrentUser,
+  withRouter
 );
