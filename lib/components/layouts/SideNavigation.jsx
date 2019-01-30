@@ -1,12 +1,12 @@
 import React from "react";
-import { withRouter } from "react-router";
+import { withRouter, matchPath } from "react-router";
 import PropTypes from "prop-types";
 import {
   Components,
   registerComponent,
   withCurrentUser
 } from "meteor/vulcan:core";
-import { browserHistory } from "react-router";
+import { browserHistory } from "react-router-dom";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
@@ -40,14 +40,16 @@ const MenuItem = (
     labelToken,
     LeftComponent,
     RightComponent,
-    router
+    // router
+    location,
+    ...otherProps
   },
   { intl }
 ) => (
   <ListItem
     key={name}
     button
-    selected={path && router.isActive(path)}
+    selected={path && matchPath(location.pathname, {path})}
     onClick={
       onClick
         ? () => {
@@ -76,6 +78,7 @@ const MenuItem = (
 
 MenuItem.propTypes = {
   ...menuItemProps,
+  location: PropTypes.object.isRequired,
   // parent can pass another onClick callback
   // eg to close the menu
   afterClick: PropTypes.func
@@ -95,7 +98,7 @@ class SideNavigation extends React.Component {
   render() {
     const { intl } = this.context;
     const {
-      router,
+      location,
       currentUser,
       classes,
       adminMenuItems,
@@ -128,7 +131,7 @@ class SideNavigation extends React.Component {
             {basicMenuItems.map(itemProps => (
               <MenuItem
                 key={itemProps.name}
-                router={router}
+                location={location}
                 {...itemProps}
                 afterClick={onMenuItemClick}
               />
@@ -159,7 +162,7 @@ class SideNavigation extends React.Component {
                     <MenuItem
                       key={props.name}
                       afterClick={onMenuItemClick}
-                      router={router}
+                      location={location}
                       {...props}
                     />
                   ))}
