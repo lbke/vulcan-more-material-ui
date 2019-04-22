@@ -1,12 +1,11 @@
 import React from "react";
-import { withRouter } from "react-router";
+import { withRouter, matchPath } from "react-router";
 import PropTypes from "prop-types";
 import {
   Components,
   registerComponent,
   withCurrentUser
 } from "meteor/vulcan:core";
-import { browserHistory } from "react-router";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
@@ -40,14 +39,15 @@ const MenuItem = (
     labelToken,
     LeftComponent,
     RightComponent,
-    router
+    history,
+    location,
   },
   { intl }
 ) => (
   <ListItem
     key={name}
     button
-    selected={path && router.isActive(path)}
+    selected={path && location && matchPath(location.pathname, { path }) !== null}
     onClick={
       onClick
         ? () => {
@@ -55,7 +55,7 @@ const MenuItem = (
             afterClick && afterClick();
           }
         : () => {
-            browserHistory.push(path);
+            history.push(path);
             afterClick && afterClick();
           }
     }
@@ -95,7 +95,8 @@ class SideNavigation extends React.Component {
   render() {
     const { intl } = this.context;
     const {
-      router,
+      history,
+      location,
       currentUser,
       classes,
       adminMenuItems,
@@ -111,7 +112,7 @@ class SideNavigation extends React.Component {
           <ListItem
             button
             onClick={() => {
-              browserHistory.push("/");
+              history.push("/");
             }}
           >
             <ListItemIcon>
@@ -128,7 +129,8 @@ class SideNavigation extends React.Component {
             {basicMenuItems.map(itemProps => (
               <MenuItem
                 key={itemProps.name}
-                router={router}
+                history={history}
+                location={location}
                 {...itemProps}
                 afterClick={onMenuItemClick}
               />
@@ -159,7 +161,8 @@ class SideNavigation extends React.Component {
                     <MenuItem
                       key={props.name}
                       afterClick={onMenuItemClick}
-                      router={router}
+                      history={history}
+                      location={location}
                       {...props}
                     />
                   ))}

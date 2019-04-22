@@ -4,7 +4,7 @@ import Drawer from "@material-ui/core/Drawer";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Hidden from "@material-ui/core/Hidden";
-import { Components, replaceComponent, Utils } from "meteor/vulcan:core";
+import { Components, registerComponent, Utils } from "meteor/vulcan:core";
 import withStyles from "@material-ui/core/styles/withStyles";
 import classNames from "classnames";
 import withWidth from "@material-ui/core/withWidth";
@@ -192,5 +192,4 @@ Layout.propTypes = {
 
 Layout.displayName = "Layout";
 
-const LayoutWithStyle = withStyles(styles)(withWidth()(Layout));
-export default LayoutWithStyle;
+registerComponent('LeftMenuLayout', Layout, [withStyles, styles], [withWidth]);
