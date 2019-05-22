@@ -10,6 +10,7 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
+import Tooltip from "@material-ui/core/Tooltip";
 import Divider from "@material-ui/core/Divider";
 import Collapse from "@material-ui/core/Collapse";
 import ExpandLessIcon from "mdi-material-ui/ChevronUp";
@@ -41,38 +42,49 @@ const MenuItem = (
     RightComponent,
     history,
     location,
+    menuName,
+    enableTooltips,
+    tooltipPlacement = 'bottom',
+    ...otherProps,
   },
   { intl }
-) => (
-  <ListItem
-    key={name}
-    button
-    selected={path && location && matchPath(location.pathname, { path }) !== null}
-    onClick={
-      onClick
-        ? () => {
-            onClick();
-            afterClick && afterClick();
-          }
-        : () => {
-            history.push(path);
-            afterClick && afterClick();
-          }
-    }
-  >
-    {LeftComponent && (
-      <ListItemIcon>
-        <LeftComponent />
-      </ListItemIcon>
-    )}
-    <ListItemText primary={label || intl.formatMessage({ id: labelToken })} />
-    {RightComponent && (
-      <ListItemIcon>
-        <RightComponent />
-      </ListItemIcon>
-    )}
-  </ListItem>
-);
+) => {
+  const displayText = label || intl.formatMessage({ id: labelToken });
+  const item = (
+    <ListItem
+      {...otherProps}
+      key={name}
+      button
+      selected={path && location && matchPath(location.pathname, { path }) !== null}
+      onClick={
+        onClick
+          ? () => {
+              onClick();
+              afterClick && afterClick();
+            }
+          : () => {
+              history.push(path);
+              afterClick && afterClick();
+            }
+      }
+    >
+      {LeftComponent && (
+        <ListItemIcon>
+          <LeftComponent />
+        </ListItemIcon>
+      )}
+      <ListItemText primary={displayText} />
+      {RightComponent && (
+        <ListItemIcon>
+          <RightComponent />
+        </ListItemIcon>
+      )}
+    </ListItem>
+  );
+  return (
+    enableTooltips ? <Tooltip title={displayText} placement={tooltipPlacement}>{item}</Tooltip> : item
+  );
+};
 
 MenuItem.propTypes = {
   ...menuItemProps,
@@ -100,7 +112,7 @@ class SideNavigation extends React.Component {
       currentUser,
       classes,
       adminMenuItems,
-      onMenuItemClick
+      onMenuItemClick,
     } = this.props;
     const isOpen = this.state.isOpen;
 
@@ -184,7 +196,12 @@ MenuItem.contextTypes = {
 SideNavigation.propTypes = {
   classes: PropTypes.object.isRequired,
   currentUser: PropTypes.object,
-  adminMenuItems: PropTypes.array
+  adminMenuItems: PropTypes.array,
+  enabledTooltips: PropTypes.bool,
+};
+
+SideNavigation.defaultProps = {
+  enableTooltips: false,
 };
 
 SideNavigation.displayName = "SideNavigation";
