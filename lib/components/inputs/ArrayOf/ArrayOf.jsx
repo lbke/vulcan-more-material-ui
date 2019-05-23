@@ -76,7 +76,7 @@ class ArrayOf extends PureComponent {
         }`}
       >
         <Grid item md={12}>
-          <Typography variant="subheading">
+          <Typography variant="subtitle1">
             <label className="control-label col-sm-3">{this.props.label}</label>
           </Typography>
         </Grid>

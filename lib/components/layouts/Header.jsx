@@ -103,7 +103,7 @@ const Header = (
           {headerLogoUrl && (
             <img src={headerLogoUrl} className={classes.logo} />
           )}
-          <Typography variant="title" color="inherit" className="tagline">
+          <Typography variant="h6" color="inherit" className="tagline">
             {title}
           </Typography>
         </div>
