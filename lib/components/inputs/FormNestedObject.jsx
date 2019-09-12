@@ -55,4 +55,4 @@ FormNestedObject.propTypes = {
 
 module.exports = FormNestedObject;
 
-replaceComponent("FormNestedObject", FormNestedObject);
+replaceComponent("FormNestedObject", FormNestedObject, null);
